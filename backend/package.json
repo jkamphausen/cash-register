@@ -13,6 +13,7 @@
     "csv-parser": "^2.3.2",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "inspirational-quotes": "^1.0.8",
     "jest": "^26.0.1",
     "lowdb": "^1.0.0",
     "uid": "^1.0.0"

@@ -1,10 +1,10 @@
-export function getDateFromString(dateString){
+export function getDateFromString(dateString) {
     // dd.mm.yy
     const [day, month, year] = dateString.split('.');
     return new Date(`20${year}-${month}-${day}`);
 }
 
-export function formatJournalData(rawCSV){
+export function formatJournalData(rawCSV) {
 
     /* raw csv:
     { 
@@ -27,7 +27,7 @@ export function formatJournalData(rawCSV){
         info: 'Umsatz gebucht' 
     } */
 
-    const formatted = [... rawCSV];
+    const formatted = [...rawCSV];
 
     formatted.forEach(row => {
 
@@ -50,7 +50,7 @@ export function formatJournalData(rawCSV){
         row.amount = row.betrag;
         row.currency = row.waehrung;
         //keep row.info !
-        
+
         // 2. delete crappy stuff
         delete row.auftragskonto;
         delete row.buchungstag;
