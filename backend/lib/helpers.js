@@ -1,11 +1,15 @@
+import Posting from './posting.class';
+import db from './db';
+
 export function getDateFromString(dateString) {
     // dd.mm.yy
     const [day, month, year] = dateString.split('.');
     return new Date(`20${year}-${month}-${day}`);
 }
 
-export function formatJournalData(rawCSV) {
+export function storeToDB(rawCSV) {
 
+    let postings = [];
     /* raw csv:
     { 
         auftragskonto: 'account',
@@ -32,8 +36,8 @@ export function formatJournalData(rawCSV) {
     formatted.forEach(row => {
 
         // 1. set proper attributes 
-        row.id = `i${Date.now()}`
         row.account = row.auftragskonto;
+        row.refDateString = row.buchungstag;
         row.entryDate = getDateFromString(row.buchungstag);
         row.valueDate = getDateFromString(row.valutadatum);
         row.postingText = row.buchungstext;
@@ -48,6 +52,7 @@ export function formatJournalData(rawCSV) {
         row.iban = row['kontonummer/iban'];
         row.bic = row['bic (swift-code)'];
         row.amount = row.betrag;
+        row.amountCents = parseInt(centifyAmount(row.betrag));
         row.currency = row.waehrung;
         //keep row.info !
 
@@ -68,8 +73,31 @@ export function formatJournalData(rawCSV) {
         delete row['bic (swift-code)'];
         delete row.betrag;
         delete row.waehrung;
+
+        const posting = Object.assign(new Posting, row);
+
+        postings.push(posting);
     });
 
-    // 3. return the 
-    return formatted;
+    db.get('postings')
+        .push(...postings)
+        .write();
+
+    // const read = db.get('postings').value();
+    console.log(postings);
+
+    // // 3. return as Postings
+    return postings;
+}
+
+
+function centifyAmount(val) {
+    const num = val.split(`,`);
+    if (!num[1]) {
+        num[1] = '00';
+    } else if (num[1].length === 1) {
+        num[1] += '0'
+    }
+    const res = num[0] + num[1];
+    return res;
 }

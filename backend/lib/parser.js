@@ -1,22 +1,31 @@
 import csv from 'csv-parser';
 import fs from 'fs';
 
-import { formatJournalData } from './helpers';
+import Posting from './posting.class';
+
+import { storeToDB } from './helpers';
 
 const DATA_PATH = '../datasets/';
+
 
 export function parseData(files) {
     // 1. check if files is an array
     if (!Array.isArray(files)) return console.error('[Parser] files[] needs to be an array');
 
-    // 2. parse all files
-    files.forEach(file => {
-        parseCSV(file);
+    // 2. get all csv files
+    const csvFiles = files.filter(file => file.slice(file.length - 4).toLowerCase() === '.csv')
+    // console.log(csvFiles);
+
+    // 3. parse all csv files
+    csvFiles.forEach(file => {
+        readToDB(file);
     });
 }
 
-export function parseCSV(filename) {
-    const results = [];
+async function readToDB(filename) {
+    if (filename.slice(filename.length - 4).toLowerCase() !== '.csv') return console.error(`${filename} is not a .csv!`);
+
+    let results = [];
     fs.createReadStream(DATA_PATH + filename)
         .pipe(csv({
             separator: ';',
@@ -24,17 +33,8 @@ export function parseCSV(filename) {
         }))
         .on('data', (data) => results.push(data))
         .on('end', () => {
-            processParsingResult(results);
+            storeToDB(results);
         });
-}
-
-function processParsingResult(results) {
-    //console.log(results);
-    const formatted = formatJournalData(results);
-    //console.info(`[Parser] ${formatted.length} entries extracted from file.`);
-
-    console.log(formatted[0].amount);
-
 }
 
 
