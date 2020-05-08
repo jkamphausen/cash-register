@@ -20,7 +20,7 @@ export function readDataset(filename){
     .map(e => e.trim()) // remove white spaces for each line
     .map(e => e.split(';').map(e => e.trim())) // split each line to array
     .map(e => e.map(f => f.slice(1,-1)))
-    .slice(); // strip header and EOF
+    ;
 
     // console.info(`Read ${data.length} lines`);
 }

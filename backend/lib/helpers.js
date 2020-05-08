@@ -1,11 +1,19 @@
 
 
 export function parseCentAmountInt(string) {
+    if(!string) {
+        console.log('WHAAAAT?');
+        return null;
+    }
     return parseInt(string.replace(',', ''));
 }
 
 export function parseDateFromString(dateString) {
     // dd.mm.yy
+    if(!dateString) {
+        console.log('WHAAAAT?');
+        return null;
+    }
     const [day, month, year] = dateString.split('.');
     return new Date(`20${year}-${month}-${day}`);
 }

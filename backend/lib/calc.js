@@ -1,10 +1,3 @@
-// let zu = 0;
-// let ab = 0;
-// let acc = 0;
-// let count = 0;
-
-// console.log(`${start} + ${zu} + ${ab} = ${start + zu + ab} (${end})`);
-// console.log( (end === (start + zu + ab)) );
 
 
 export function calculateResult(journal, initial){

@@ -9,21 +9,29 @@ import { readDataset, readMultipleDatasets } from './lib/parser';
 import { calculateResult } from './lib/calc';
 
 // constants
-const YEAR = 2017;
+const YEAR = 2016;
 const YEAR1 = 2016;
 const YEAR2 = 2016;
 
 const FILES = [
     //'2015-108266.CSV',
-    //'2016-108266.CSV',
+    '2016-108266.CSV',
     '2017-108266.CSV',
     //'2018-108266.CSV',
     //'2019-108266.CSV',
 ];
 
+let test = readDataset('2015-108266.CSV');
+// console.log(test[0]);
+// console.log(test[1]);
+// console.log(test[2]);
+// console.log(test[3]);
+// console.log(test[test.length-4]);
+// console.log(test[test.length-3]);
+// console.log(test[test.length-2]);
+// console.log(test[test.length-1]);
 
 let journal = [];
-//const data = readDataset(`${YEAR1}-108266.CSV`);
 
 const data2 = readMultipleDatasets(FILES);
 
@@ -35,9 +43,12 @@ data2.slice(1,-1).forEach((row, index) => {
     //console.log(removeQuotes(row[0]));
     const newEntry = {
         account: row[0],
-        entryData: parseDateFromString(row[1]),
+        entryDate: parseDateFromString(row[1]),
         amount: parseCentAmountInt(row[14])
     }
+
+    if(newEntry.entryDate === null || newEntry.amount === null) console.log(newEntry);
+
     journal.push(newEntry);
     // console.log(newEntry);
     if(index < 3) {
@@ -53,7 +64,7 @@ data2.slice(1,-1).forEach((row, index) => {
 const CHECKS = {
     2015: {
         start: 0,
-        end: 0,
+        end: 1113381,
     },
     2016: {
         start: 1113381,
@@ -74,11 +85,11 @@ const CHECKS = {
 };
 
 
-const start = CHECKS[YEAR].start;
-const end = CHECKS[YEAR].end;
+const start = CHECKS[2016].start;
+const end = CHECKS[2017].end;
 
 const { initial, ins, outs, cumulative }  = calculateResult(journal, start);
-console.log(`${initial} + ${ins} + ${outs} = ${cumulative} (${end})`);
+console.log(`${initial} + ${ins} + ${outs} = ${cumulative} (${end}) | ${journal.length}`);
 console.log( (end === (cumulative)) );
 
 // const start = CHECKS[YEAR1].start;
