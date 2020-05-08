@@ -1,40 +1,26 @@
-import csv from 'csv-parser';
+// node_modules
 import fs from 'fs';
 
-import Posting from './posting.class';
-
-import { storeToDB } from './helpers';
-
+// constants
 const DATA_PATH = '../datasets/';
 
-
-export function parseData(files) {
-    // 1. check if files is an array
-    if (!Array.isArray(files)) return console.error('[Parser] files[] needs to be an array');
-
-    // 2. get all csv files
-    const csvFiles = files.filter(file => file.slice(file.length - 4).toLowerCase() === '.csv')
-    // console.log(csvFiles);
-
-    // 3. parse all csv files
-    csvFiles.forEach(file => {
-        readToDB(file);
-    });
+export function readMultipleDatasets(filenames = []){
+    let totalData = [];
+    filenames.forEach(file => {
+        totalData = [...totalData, ...readDataset(file)];
+        //console.log(readDataset(file)[0])
+    })
+    return totalData;
 }
 
-async function readToDB(filename) {
-    if (filename.slice(filename.length - 4).toLowerCase() !== '.csv') return console.error(`${filename} is not a .csv!`);
+export function readDataset(filename){
+    return fs.readFileSync(DATA_PATH + filename)
+    .toString() // convert Buffer to string
+    .split('\n') // split string to lines
+    .map(e => e.trim()) // remove white spaces for each line
+    .map(e => e.split(';').map(e => e.trim())) // split each line to array
+    .map(e => e.map(f => f.slice(1,-1)))
+    .slice(); // strip header and EOF
 
-    let results = [];
-    fs.createReadStream(DATA_PATH + filename)
-        .pipe(csv({
-            separator: ';',
-            mapHeaders: ({ header, index }) => header.toLowerCase()
-        }))
-        .on('data', (data) => results.push(data))
-        .on('end', () => {
-            storeToDB(results);
-        });
+    // console.info(`Read ${data.length} lines`);
 }
-
-

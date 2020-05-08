@@ -1,35 +1,46 @@
-import Posting from './posting.class';
-import db from './db';
 
-export function getDateFromString(dateString) {
+
+export function parseCentAmountInt(string) {
+    return parseInt(string.replace(',', ''));
+}
+
+export function parseDateFromString(dateString) {
     // dd.mm.yy
     const [day, month, year] = dateString.split('.');
     return new Date(`20${year}-${month}-${day}`);
 }
 
+
+
+
+
+
+
+
+/*
 export function storeToDB(rawCSV) {
 
     let postings = [];
-    /* raw csv:
-    { 
-        auftragskonto: 'account',
-        buchungstag: '20.01.15',
-        valutadatum: '20.01.15',
-        buchungstext: 'posting text',
-        verwendungszweck: 'reference text ',
-        'glaeubiger id': 'creditor id text',
-        mandatsreferenz: 'mandate ref text',
-        'kundenreferenz (end-to-end)': 'customer reference text',
-        sammlerreferenz: 'collector reference',
-        'lastschrift ursprungsbetrag': 'original amount',
-        'auslagenersatz ruecklastschrift': 'reimbursement',
-        'beguenstigter/zahlungspflichtiger': 'opposite person name',
-        'kontonummer/iban': 'iban',
-        'bic (swift-code)': 'bic',
-        betrag: '-64,90',
-        waehrung: 'EUR',
-        info: 'Umsatz gebucht' 
-    } */
+    // raw csv:
+    // { 
+    //     auftragskonto: 'account',
+    //     buchungstag: '20.01.15',
+    //     valutadatum: '20.01.15',
+    //     buchungstext: 'posting text',
+    //     verwendungszweck: 'reference text ',
+    //     'glaeubiger id': 'creditor id text',
+    //     mandatsreferenz: 'mandate ref text',
+    //     'kundenreferenz (end-to-end)': 'customer reference text',
+    //     sammlerreferenz: 'collector reference',
+    //     'lastschrift ursprungsbetrag': 'original amount',
+    //     'auslagenersatz ruecklastschrift': 'reimbursement',
+    //     'beguenstigter/zahlungspflichtiger': 'opposite person name',
+    //     'kontonummer/iban': 'iban',
+    //     'bic (swift-code)': 'bic',
+    //     betrag: '-64,90',
+    //     waehrung: 'EUR',
+    //     info: 'Umsatz gebucht' 
+    // }
 
     const formatted = [...rawCSV];
 
@@ -89,8 +100,10 @@ export function storeToDB(rawCSV) {
     // // 3. return as Postings
     return postings;
 }
+*/
 
-
+/*
+// old
 function centifyAmount(val) {
     const num = val.split(`,`);
     if (!num[1]) {
@@ -101,3 +114,4 @@ function centifyAmount(val) {
     const res = num[0] + num[1];
     return res;
 }
+*/
