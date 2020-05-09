@@ -17,7 +17,7 @@ const FILES = [
     //'2015-108266.CSV',
     '2016-108266.CSV',
     '2017-108266.CSV',
-    //'2018-108266.CSV',
+    '2018-108266.CSV',
     //'2019-108266.CSV',
 ];
 
@@ -39,7 +39,15 @@ const data2 = readMultipleDatasets(FILES);
 // console.log(data2[1]);
 
 data2.slice(1,-1).forEach((row, index) => {
-    
+
+    if(row[0] === 'Auftragskonto') {
+        // console.log(`skipping header row: «${row}»`)
+        return;
+    }
+    if(row[0] === '') {
+        // console.log(`skipping EOF row: «${row}»`)
+        return;
+    }
     //console.log(removeQuotes(row[0]));
     const newEntry = {
         account: row[0],
@@ -86,7 +94,7 @@ const CHECKS = {
 
 
 const start = CHECKS[2016].start;
-const end = CHECKS[2017].end;
+const end = CHECKS[2018].end;
 
 const { initial, ins, outs, cumulative }  = calculateResult(journal, start);
 console.log(`${initial} + ${ins} + ${outs} = ${cumulative} (${end}) | ${journal.length}`);

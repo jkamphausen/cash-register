@@ -2,8 +2,8 @@
 
 export function parseCentAmountInt(string) {
     if(!string) {
-        console.log('WHAAAAT?');
-        return null;
+        console.log(`${string} can not be pared to cent amount!`);
+        return undefined;
     }
     return parseInt(string.replace(',', ''));
 }
@@ -11,8 +11,8 @@ export function parseCentAmountInt(string) {
 export function parseDateFromString(dateString) {
     // dd.mm.yy
     if(!dateString) {
-        console.log('WHAAAAT?');
-        return null;
+        console.log(`${dateString} can not be pared to Date()!`);
+        return undefined;
     }
     const [day, month, year] = dateString.split('.');
     return new Date(`20${year}-${month}-${day}`);
