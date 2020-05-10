@@ -6,39 +6,46 @@ import inspiration from 'inspirational-quotes';
 // ./lib
 import { parseCentAmountInt, parseDateFromString } from './lib/helpers';
 import { readDataset, readMultipleDatasets } from './lib/parser';
-import { calculateResult } from './lib/calc';
+import { calculateResult, calculateMonthlyResults } from './lib/calc';
 
 // constants
-const YEAR = 2016;
-const YEAR1 = 2016;
-const YEAR2 = 2016;
-
 const FILES = [
-    //'2015-108266.CSV',
-    '2016-108266.CSV',
-    '2017-108266.CSV',
-    '2018-108266.CSV',
+    '2015-108266.CSV',
+    //'2016-108266.CSV',
+    //'2017-108266.CSV',
+    //'2018-108266.CSV',
     //'2019-108266.CSV',
 ];
 
-let test = readDataset('2015-108266.CSV');
-// console.log(test[0]);
-// console.log(test[1]);
-// console.log(test[2]);
-// console.log(test[3]);
-// console.log(test[test.length-4]);
-// console.log(test[test.length-3]);
-// console.log(test[test.length-2]);
-// console.log(test[test.length-1]);
+const CHECKS = {
+    2015: {
+        start: 111300,
+        end: 1113381,
+    },
+    2016: {
+        start: 1113381,
+        end: 190137,
+    },
+    2017: {
+        start: 190137,
+        end: 215113,
+    },
+    2018: {
+        start: 215113,
+        end: 335017,
+    },
+    2019: {
+        start: 0,
+        end: 0,
+    },
+};
 
+// variables
 let journal = [];
 
-const data2 = readMultipleDatasets(FILES);
+const data = readMultipleDatasets(FILES);
 
-// console.log(data[1]);
-// console.log(data2[1]);
-
-data2.slice(1,-1).forEach((row, index) => {
+data.slice(1,-1).forEach((row, index) => {
 
     if(row[0] === 'Auftragskonto') {
         // console.log(`skipping header row: «${row}»`)
@@ -66,39 +73,24 @@ data2.slice(1,-1).forEach((row, index) => {
     } 
 });
 
-
-
-
-const CHECKS = {
-    2015: {
-        start: 0,
-        end: 1113381,
-    },
-    2016: {
-        start: 1113381,
-        end: 190137,
-    },
-    2017: {
-        start: 190137,
-        end: 215113,
-    },
-    2018: {
-        start: 215113,
-        end: 335017,
-    },
-    2019: {
-        start: 0,
-        end: 0,
-    },
-};
-
-
-const start = CHECKS[2016].start;
-const end = CHECKS[2018].end;
+const start = CHECKS[2015].start;
+const end = CHECKS[2015].end;
 
 const { initial, ins, outs, cumulative }  = calculateResult(journal, start);
 console.log(`${initial} + ${ins} + ${outs} = ${cumulative} (${end}) | ${journal.length}`);
-console.log( (end === (cumulative)) );
+console.log( (end === cumulative) );
+if(end !== cumulative){
+    console.log(`CHECK: ${end} | RESULT: ${cumulative} | CHECK - RESULT: ${ end - cumulative }`);   
+}
+
+
+calculateMonthlyResults(journal, start);
+
+
+
+
+
+
 
 // const start = CHECKS[YEAR1].start;
 // const end = CHECKS[YEAR2].end;

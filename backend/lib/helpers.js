@@ -1,4 +1,20 @@
-
+const YEAR = {
+    year: undefined, 
+    month: {
+        0: [],
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
+        7: [],
+        8: [],
+        9: [],
+        10: [],
+        11: [],
+    }
+}
 
 export function parseCentAmountInt(string) {
     if(!string) {
@@ -18,9 +34,50 @@ export function parseDateFromString(dateString) {
     return new Date(`20${year}-${month}-${day}`);
 }
 
+export function sectionJournalMonthly(journal = []){
+
+    console.group('TESTING');
+
+    console.log(`${journal.length} in journal.`);
+
+    console.log('getYearsTouched');
+    console.log(getYearsTouched(journal));
+
+    console.log('sortByYear');
+    console.log(sortByYear(journal)[0][2015]);
 
 
+    //let sectionedJournal = setUpMonthlyJournal();
+    
+    // journal.forEach(posting => {
+    //     const year = posting.entryDate.getFullYear();
+    //     const month = posting.entryDate.getMonth();
+    //     sectionedJournal[year][month] = 1;
+    //     console.log({year, month});
+    // });
+    // return sectionedJournal;
+}
 
+function sortByYear(journal = []){
+    const original = journal;
+    const sorted = [];
+    const years = getYearsTouched(original);
+    years.forEach(year => {
+        let copy = original;
+        sorted.push( (year.toString()) => copy.filter(posting => year === posting.entryDate.getFullYear()) );
+        //ref = ;
+    });
+    return sorted;
+}
+
+export function getYearsTouched(journal){
+    let years = [];
+    journal.forEach( ({entryDate}) =>{
+        const year = entryDate.getFullYear();
+        if(!years.includes(year)) years.push(year)
+    });
+    return years;
+}
 
 
 

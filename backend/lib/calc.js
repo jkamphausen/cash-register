@@ -1,4 +1,4 @@
-
+import { sectionJournalMonthly } from './helpers';
 
 export function calculateResult(journal, initial){
     // set up the result object
@@ -30,4 +30,10 @@ export function calculateResult(journal, initial){
     result.cumulative += result.balance;
 
     return result;
+}
+
+
+export function calculateMonthlyResults(journal, initial){
+    const sectionedJournal = sectionJournalMonthly(journal);
+    console.log(sectionedJournal);
 }
