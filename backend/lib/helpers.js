@@ -1,5 +1,5 @@
 const YEAR = {
-    year: undefined, 
+    year: undefined,
     month: {
         0: [],
         1: [],
@@ -17,7 +17,7 @@ const YEAR = {
 }
 
 export function parseCentAmountInt(string) {
-    if(!string) {
+    if (!string) {
         console.log(`${string} can not be pared to cent amount!`);
         return undefined;
     }
@@ -26,7 +26,7 @@ export function parseCentAmountInt(string) {
 
 export function parseDateFromString(dateString) {
     // dd.mm.yy
-    if(!dateString) {
+    if (!dateString) {
         console.log(`${dateString} can not be pared to Date()!`);
         return undefined;
     }
@@ -34,50 +34,50 @@ export function parseDateFromString(dateString) {
     return new Date(`20${year}-${month}-${day}`);
 }
 
-export function sectionJournalMonthly(journal = []){
+// export function sectionJournalMonthly(journal = []){
 
-    console.group('TESTING');
+//     console.group('TESTING');
 
-    console.log(`${journal.length} in journal.`);
+//     console.log(`${journal.length} in journal.`);
 
-    console.log('getYearsTouched');
-    console.log(getYearsTouched(journal));
+//     console.log('getYearsTouched');
+//     console.log(getYearsTouched(journal));
 
-    console.log('sortByYear');
-    console.log(sortByYear(journal)[0][2015]);
+//     console.log('sortByYear');
+//     console.log(sortByYear(journal)[0][2015]);
 
 
-    //let sectionedJournal = setUpMonthlyJournal();
-    
-    // journal.forEach(posting => {
-    //     const year = posting.entryDate.getFullYear();
-    //     const month = posting.entryDate.getMonth();
-    //     sectionedJournal[year][month] = 1;
-    //     console.log({year, month});
-    // });
-    // return sectionedJournal;
-}
+//     //let sectionedJournal = setUpMonthlyJournal();
 
-function sortByYear(journal = []){
-    const original = journal;
-    const sorted = [];
-    const years = getYearsTouched(original);
-    years.forEach(year => {
-        let copy = original;
-        sorted.push( (year.toString()) => copy.filter(posting => year === posting.entryDate.getFullYear()) );
-        //ref = ;
-    });
-    return sorted;
-}
+//     // journal.forEach(posting => {
+//     //     const year = posting.entryDate.getFullYear();
+//     //     const month = posting.entryDate.getMonth();
+//     //     sectionedJournal[year][month] = 1;
+//     //     console.log({year, month});
+//     // });
+//     // return sectionedJournal;
+// }
 
-export function getYearsTouched(journal){
-    let years = [];
-    journal.forEach( ({entryDate}) =>{
-        const year = entryDate.getFullYear();
-        if(!years.includes(year)) years.push(year)
-    });
-    return years;
-}
+// function sortByYear(journal = []){
+//     const original = journal;
+//     const sorted = [];
+//     const years = getYearsTouched(original);
+//     years.forEach(year => {
+//         let copy = original;
+//         sorted.push( (year.toString()) => copy.filter(posting => year === posting.entryDate.getFullYear()) );
+//         //ref = ;
+//     });
+//     return sorted;
+// }
+
+// export function getYearsTouched(journal){
+//     let years = [];
+//     journal.forEach( ({entryDate}) =>{
+//         const year = entryDate.getFullYear();
+//         if(!years.includes(year)) years.push(year)
+//     });
+//     return years;
+// }
 
 
 
@@ -87,7 +87,7 @@ export function storeToDB(rawCSV) {
 
     let postings = [];
     // raw csv:
-    // { 
+    // {
     //     auftragskonto: 'account',
     //     buchungstag: '20.01.15',
     //     valutadatum: '20.01.15',
@@ -104,14 +104,14 @@ export function storeToDB(rawCSV) {
     //     'bic (swift-code)': 'bic',
     //     betrag: '-64,90',
     //     waehrung: 'EUR',
-    //     info: 'Umsatz gebucht' 
+    //     info: 'Umsatz gebucht'
     // }
 
     const formatted = [...rawCSV];
 
     formatted.forEach(row => {
 
-        // 1. set proper attributes 
+        // 1. set proper attributes
         row.account = row.auftragskonto;
         row.refDateString = row.buchungstag;
         row.entryDate = getDateFromString(row.buchungstag);

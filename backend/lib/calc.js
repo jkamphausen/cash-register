@@ -1,6 +1,6 @@
-import { sectionJournalMonthly } from './helpers';
+//import { sectionJournalMonthly } from './helpers';
 
-export function calculateResult(journal, initial){
+export function calculateResult(journal, initial) {
     // set up the result object
     let result = {
         initial,
@@ -15,7 +15,7 @@ export function calculateResult(journal, initial){
     journal.forEach(e => {
         result.count++;
         //console.info(`${count}: ${e.amount}`);
-        if(e.amount > 0) {
+        if (e.amount > 0) {
             result.ins = result.ins + e.amount;
         } else if (0 > e.amount) {
             result.outs = result.outs + e.amount;
@@ -24,7 +24,7 @@ export function calculateResult(journal, initial){
             return;
         }
         result.balance = result.balance + e.amount;
-        if(result.balance !== (result.ins + result.outs)) console.log('sth\'s terribly wrong!');
+        if (result.balance !== (result.ins + result.outs)) console.log('sth\'s terribly wrong!');
     });
 
     result.cumulative += result.balance;
@@ -32,8 +32,36 @@ export function calculateResult(journal, initial){
     return result;
 }
 
+const JOURNAL_BY_MONTH = { year: 2015, first: null, last: null, jan: [], feb: [], mar: [], }
 
-export function calculateMonthlyResults(journal, initial){
-    const sectionedJournal = sectionJournalMonthly(journal);
-    console.log(sectionedJournal);
+export function calculateMonthlyResults(journal, initial) {
+    const monthlyJournal = journal.reduce(divideJournal, []);
+
+    console.log(monthlyJournal);
+    return monthlyJournal;
+}
+
+const divideJournal = (dividedJournal, posting) => {
+    const year = posting.entryDate.getFullYear();
+    const month = getMonthNameShort(posting.entryDate);
+
+    //console.log(dividedJournal.find(y => y == { year }));
+
+    // dividedJournal.find(y => y.year === year) ? dividedJournal.find(y => y.year === year).postings = [posting] : dividedJournal.push({ year, postings: [posting] });
+
+    const affectedYear = dividedJournal.find(y => y.year === year);
+
+    if (affectedYear) {
+        affectedYear[month] ? affectedYear[month].push(posting) : affectedYear[month] = [posting]
+        //dividedJournal.find(y => y.year === year).postings = [posting]
+    } else {
+        dividedJournal.push({ year, [month]: [posting] })
+    }
+
+    return dividedJournal;
+}
+
+function getMonthNameShort(date) {
+    const monthNamesShort = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    return monthNamesShort[date.getMonth()];
 }

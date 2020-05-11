@@ -11,8 +11,8 @@ import { calculateResult, calculateMonthlyResults } from './lib/calc';
 // constants
 const FILES = [
     '2015-108266.CSV',
-    //'2016-108266.CSV',
-    //'2017-108266.CSV',
+    '2016-108266.CSV',
+    '2017-108266.CSV',
     //'2018-108266.CSV',
     //'2019-108266.CSV',
 ];
