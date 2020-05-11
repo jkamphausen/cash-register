@@ -49,11 +49,76 @@ const JOURNAL_BY_MONTH = {
 }
 
 export function calculateMonthlyResults(journal, initial) {
-    const monthlyJournal = journal.reduce(divideJournal, []);
+    const monthlyJournal = journal
+        .reduce(divideByAccounts, []);
+    //.map(acc => acc.postings.reduce(divideByYears, []));
 
     console.log(monthlyJournal);
     return monthlyJournal;
 }
+
+
+function divideByAccounts(dividedJournal, posting) {
+    const { account, amount } = posting;
+    let affectedAccount = dividedJournal.find(acc => acc.account === account);
+
+    let incoming = 0,
+        outgoing = 0;
+
+    amount >= 0
+        ? incoming = amount
+        : outgoing = amount;
+
+    if (affectedAccount) {
+        affectedAccount = {
+            ins: affectedAccount.ins += incoming,
+            out: affectedAccount.out += outgoing,
+            balance: affectedAccount.balance += amount,
+            transactions: affectedAccount.transactions += 1,
+            postings: affectedAccount.postings.push(posting),
+            ...affectedAccount,
+        }
+
+        //affectedAccount.postings.push(posting);
+    } else {
+        dividedJournal.push({
+            account,
+            ins: incoming,
+            out: outgoing,
+            balance: amount,
+            transactions: 1,
+            postings: [posting]
+        });
+    }
+
+    // affectedAccount
+    //     ? affectedAccount.postings.push(posting)
+    //     : dividedJournal.push({ account, postings: [posting] });
+
+    return dividedJournal;
+}
+
+
+function divideByYears(devidedAccount, posting) {
+    const year = posting.entryDate.getFullYear();
+    let affectedYear = devidedAccount.find(y => y.year === year);
+
+    console.log(affectedYear);
+
+
+    affectedYear
+        ? devidedAccount.postings.push(posting)
+        : devidedAccount.push({ year, postings: [posting] });
+
+    return devidedAccount;
+}
+
+
+
+
+
+
+
 
 const divideJournal = (dividedJournal, posting) => {
     const year = posting.entryDate.getFullYear();
