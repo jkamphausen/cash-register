@@ -50,8 +50,8 @@ const JOURNAL_BY_MONTH = {
 
 export function calculateMonthlyResults(journal, initial) {
     const monthlyJournal = journal
-        .reduce(divideByAccounts, []);
-    //.map(acc => acc.postings.reduce(divideByYears, []));
+        .reduce(divideByAccounts, [])
+        .reduce(subdivideByYears, []);
 
     console.log(monthlyJournal);
     return monthlyJournal;
@@ -69,7 +69,7 @@ function divideByAccounts(dividedJournal, posting) {
         ? incoming = amount
         : outgoing = amount;
 
-    if (affectedAccount) {
+    if (affectedAccount) { // account posting belongs to exists?
         affectedAccount = {
             ins: affectedAccount.ins += incoming,
             out: affectedAccount.out += outgoing,
@@ -79,8 +79,7 @@ function divideByAccounts(dividedJournal, posting) {
             ...affectedAccount,
         }
 
-        //affectedAccount.postings.push(posting);
-    } else {
+    } else { // account posting belongs to doesn't exist
         dividedJournal.push({
             account,
             ins: incoming,
@@ -91,31 +90,53 @@ function divideByAccounts(dividedJournal, posting) {
         });
     }
 
-    // affectedAccount
-    //     ? affectedAccount.postings.push(posting)
-    //     : dividedJournal.push({ account, postings: [posting] });
-
     return dividedJournal;
 }
 
 
-function divideByYears(devidedAccount, posting) {
-    const year = posting.entryDate.getFullYear();
-    let affectedYear = devidedAccount.find(y => y.year === year);
+function subdivideByYears(dividedAccount, account) {
+    const { postings } = account;
+    account.years = [];
+    postings.forEach(posting => {
 
-    console.log(affectedYear);
+        const year = posting.entryDate.getFullYear();
+        const { amount } = posting;
 
+        if (!dividedAccount.years) dividedAccount.years = [];
+        let affectedYear = dividedAccount.years.find(y => y.year === year);
 
-    affectedYear
-        ? devidedAccount.postings.push(posting)
-        : devidedAccount.push({ year, postings: [posting] });
+        let incoming = 0,
+            outgoing = 0;
 
-    return devidedAccount;
+        amount >= 0
+            ? incoming = amount
+            : outgoing = amount;
+
+        if (affectedYear) { // year posting belongs in exists?
+            affectedYear = {
+                ins: affectedYear.ins += incoming,
+                out: affectedYear.out += outgoing,
+                balance: affectedYear.balance += amount,
+                transactions: affectedYear.transactions += 1,
+                postings: affectedYear.postings.push(posting),
+                ...affectedYear,
+            }
+
+        } else { // year posting belongs in doesn't exist
+            dividedAccount.years.push({
+                year,
+                ins: incoming,
+                out: outgoing,
+                balance: amount,
+                transactions: 1,
+                postings: [posting]
+            });
+        }
+
+    });
+
+    return dividedAccount;
 }
-
-
-
-
 
 
 
