@@ -33,3 +33,11 @@ export function parseDateFromString(dateString) {
     const [day, month, year] = dateString.split('.');
     return new Date(`20${year}-${month}-${day}`);
 }
+
+export function toHumanReadableMonth(val) {
+    return val + 1;
+}
+
+export function toComputerReadableMonth(val) {
+    return val - 1;
+}
