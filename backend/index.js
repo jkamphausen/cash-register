@@ -8,62 +8,53 @@ import { readMultipleDatasets, getJournalFromData } from './lib/parser';
 import { writeCSV } from './lib/writer';
 import { CHECKS } from './lib/checks';
 
-
-// import { calculateResult, calculateMonthlyResults } from './lib/calcA';
-
 // constants
 const FILES = [
     //'2015-108266.CSV',
     //'2016-108266.CSV',
-    '2016-3657277.CSV',
+    //'2016-3657277.CSV',
     '2017-108266.CSV',
     //'2017-3657277.CSV',
     //'2018-108266.CSV',
     //'2019-108266.CSV',
 ];
 
-// variables
+// server
 
-function test(journal) {
-    let { calculated: { ins, outs, transactions, balance, accounts, years, timespan, monthly } } = journal;
-    console.log({ ins, outs, transactions, balance, accounts, years, timespan, monthly });
-}
-
-function testM(journal) {
-    let { calculated: { ins, outs, transactions, balance, accounts, years, timespan, monthly } } = journal;
-    console.log(monthly);
-}
+const app = express();
+const port = 1848;
 
 const journal = getJournalFromData(readMultipleDatasets(FILES));
-test(journal);
 
-const journal2 = journal.getSubsetByInterval(new Date(2017, 3, 1), new Date(2017, 7, 31));
-//test(journal2);
+app.get('/', function (req, res) {
+    res.send('hello world')
+})
 
-//const journal3 = journal.getSubsetByInterval(new Date(2017, 0, 1), new Date(2017, 11, 31));
-//test(journal3);
-//testM(journal3);
+app.get('/journal', function (req, res) {
+    res.json(journal)
+})
 
+app.get('/journal/account/:accountId', function (req, res) {
+    // const journal = getJournalFromData(readMultipleDatasets(FILES));
+    // res.json(journal)
+    res.json(journal.getSubsetByAccount(req.params.accountId));
+    //res.send(`accountId: ${req.params.accountId}`);
+})
 
-// let sumMonthBalances = 0;
-// journal.calculated.monthly.forEach(m => {
-//     console.log(`${m.key}: ${m.calculated.balance}`);
-//     sumMonthBalances += m.calculated.balance;
-// });
+app.get('/journal/interval', function (req, res) {
+    // const journal = getJournalFromData(readMultipleDatasets(FILES));
+    // res.json(journal)
+    let startDate, endDate;
+    if (req.query.start && req.query.end) {
+        const start = req.query.start.split('-');
+        const end = req.query.end.split('-');
+        startDate = new Date(start[0], start[1], start[2]);
+        endDate = new Date(end[0], end[1], end[2]);
+    }
+    res.json(journal.getSubsetByInterval(startDate, endDate));
+    //res.send(`accountId: ${req.params.accountId}`);
+})
 
-// console.log({ months: sumMonthBalances, journal: journal.calculated.balance })
-
-
-journal.postings[0]
-    .allocate({ amount: -2000, pool: 'a' })
-    .allocate({ amount: -500, pool: 'b' })
-    .allocate({ amount: -500, pool: 'x' });
-
-console.log(journal.postings[0]);
-
-
-/*
-let { ins, outs, transactions, balance, accounts, years, timespan } = journal;
-console.log({ ins, outs, transactions, balance, accounts, years, timespan });
-
-*/
+app.listen(port, () => {
+    console.log(`[cash-register] Server running on http://localhost:${port} 🚀`);
+})
