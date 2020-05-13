@@ -1,3 +1,12 @@
+import Page from '../components/Page';
+import Data from '../components/Data';
+
 export default function Home() {
-    return <p>Home</p>
+    return (
+        <Page>
+            <h1>Home</h1>
+            <p>Hello!</p>
+            <Data />
+        </Page>
+    );
 }
