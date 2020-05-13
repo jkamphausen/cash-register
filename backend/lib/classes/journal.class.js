@@ -32,13 +32,6 @@ export default class Journal {
     constructor() {
         const { calculated, postings, monthly } = _.cloneDeep(EMPTY);
         this.calculated = calculated;
-        // this.calculated.ins = ins;
-        // this.calculated.outs = outs;
-        // this.calculated.balance = balance;
-        // this.calculated.transactions = transactions;
-        // this.calculated.accounts = accounts;
-        // this.calculated.years = years;
-        // this.calculated.timespan = timespan;
         this.postings = postings;
         this.monthly = monthly;
     }
@@ -46,6 +39,7 @@ export default class Journal {
     // add a new Posting to this journal 
     addPosting(posting) {
         this.postings.push(posting)
+        this.sortPostingsByProp('entryDate', 'asc');
         this.updateTotals();
         return this;
     }
@@ -75,11 +69,26 @@ export default class Journal {
     }
 
     // extract a subset of this journal by an interval of dates
-    getSubset(startDate = this.calculated.timespan.first, endDate = this.calculated.timespan.last) {
+    getSubsetByInterval(startDate = this.calculated.timespan.first, endDate = this.calculated.timespan.last) {
         const postings = this.postings.filter(p => isWithinInterval(p.entryDate, { start: startDate, end: endDate }));
         const subset = new Journal();
         subset.addPostings(postings.slice());
         return subset;
+    }
+
+    // extract a subset of this journal by an specific account
+    getSubsetByAccount(account) {
+        const postings = this.postings.filter(p => p.account === account);
+        const subset = new Journal();
+        subset.addPostings(postings.slice());
+        return subset;
+    }
+
+    sortPostingsByProp(prop, direction = 'asc') {
+        this.postings.sort(function (a, b) {
+            if (direction === 'desc') return b[prop] - a[prop];
+            else return a[prop] - b[prop];
+        });
     }
 }
 
@@ -135,4 +144,3 @@ function updateTotalsReducer(totals, posting) {
 
     return totals;
 }
-
