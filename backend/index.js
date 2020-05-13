@@ -15,7 +15,7 @@ import { CHECKS } from './lib/checks';
 const FILES = [
     //'2015-108266.CSV',
     //'2016-108266.CSV',
-    //'2016-3657277.CSV',
+    '2016-3657277.CSV',
     '2017-108266.CSV',
     //'2017-3657277.CSV',
     //'2018-108266.CSV',
@@ -35,30 +35,32 @@ function testM(journal) {
 }
 
 const journal = getJournalFromData(readMultipleDatasets(FILES));
-//test(journal);
+test(journal);
 
-const journal2 = journal.getSubset(new Date(2017, 3, 1), new Date(2017, 7, 31));
+const journal2 = journal.getSubsetByInterval(new Date(2017, 3, 1), new Date(2017, 7, 31));
 //test(journal2);
 
-const journal3 = journal.getSubset(new Date(2017, 0, 1), new Date(2017, 11, 31));
+//const journal3 = journal.getSubsetByInterval(new Date(2017, 0, 1), new Date(2017, 11, 31));
 //test(journal3);
-testM(journal3);
+//testM(journal3);
 
 
-let sumMonthBalances = 0;
-journal.calculated.monthly.forEach(m => {
-    console.log(`${m.key}: ${m.calculated.balance}`);
-    sumMonthBalances += m.calculated.balance;
-});
+// let sumMonthBalances = 0;
+// journal.calculated.monthly.forEach(m => {
+//     console.log(`${m.key}: ${m.calculated.balance}`);
+//     sumMonthBalances += m.calculated.balance;
+// });
 
-console.log({ months: sumMonthBalances, journal: journal.calculated.balance })
+// console.log({ months: sumMonthBalances, journal: journal.calculated.balance })
 
-/*
+
 journal.postings[0]
-    .allocate({ amount: -566, pool: 'a' })
-    .allocate({ amount: -107, pool: 'b' })
-    .allocate({ amount: -1660, pool: 'x' });
-*/
+    .allocate({ amount: -2000, pool: 'a' })
+    .allocate({ amount: -500, pool: 'b' })
+    .allocate({ amount: -500, pool: 'x' });
+
+console.log(journal.postings[0]);
+
 
 /*
 let { ins, outs, transactions, balance, accounts, years, timespan } = journal;

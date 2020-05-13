@@ -1,10 +1,8 @@
 // node_modules
 import _ from 'lodash';
-import { format } from 'date-fns';
 import uid from 'uid';
 
 // ./lib
-import { toHumanReadableMonth, toComputerReadableMonth } from '../helpers';
 
 const EMPTY = {
     calculated: {
