@@ -1,6 +1,7 @@
 // node_modules
 import fs from 'fs';
 import express from 'express';
+import cors from 'cors';
 import inspiration from 'inspirational-quotes';
 
 // ./lib
@@ -22,6 +23,8 @@ const FILES = [
 // server
 
 const app = express();
+app.use(cors());
+
 const port = 1848;
 
 const journal = getJournalFromData(readMultipleDatasets(FILES));
